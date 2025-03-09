@@ -1,14 +1,14 @@
-import datetime
 import os
+from datetime import datetime
 
-LOG_DIR = "logs"
-LOG_FILE = os.path.join(LOG_DIR, "sent_emails.log")
+LOG_FILE = "logs/sent_emails.log"
 
-os.makedirs(LOG_DIR, exist_ok=True)
+def log_email(recipient, status):
+    """Logs email activity with timestamps."""
+    os.makedirs("logs", exist_ok=True) 
 
-def log_email(email, status):
-    log_entry = f"{datetime.datetime.now()} - {email} - {status}"
-    
-    with open(LOG_FILE, "a") as log:
-        log.write(log_entry + "\n")
-    print(log_entry) 
+    with open(LOG_FILE, "a", encoding="utf-8") as log:
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        log.write(f"[{timestamp}] To: {recipient} - Status: {status}\n")
+
+    print(f"📜 Logged: {recipient} - {status}")

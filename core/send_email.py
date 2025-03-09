@@ -1,14 +1,13 @@
-import smtplib
 import os
+import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 from dotenv import load_dotenv
-import csv
 from core.email_service import generate_email_content
+from core.logger import log_email
 
-# Load environment variables
 load_dotenv()
 
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
@@ -40,9 +39,11 @@ def send_email(to_email, name, custom_message):
             server.starttls()
             server.login(EMAIL_SENDER, EMAIL_PASSWORD)
             server.sendmail(EMAIL_SENDER, to_email, msg.as_string())
-
+            
+        log_email(to_email, "Sent Successfully ✅")
         print(f"✅ Email sent to {to_email}")
 
     except Exception as e:
+        log_email(to_email,  f"Failed: {str(e)} ❌")
         print(f"❌ Failed to send email to {to_email}: {e}")
 
