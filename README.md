@@ -1,90 +1,104 @@
-# 📧 Advanced Python Email Sender
+# Automated Email Sender
 
-## 📌 Overview
-This is a **scalable and customizable email sender** built with Python. It allows you to send **personalized emails with attachments** to multiple recipients listed in a CSV file. It also logs sent emails for tracking purposes.
-
----
-
-## 🚀 Features
-✅ Reads recipients from a CSV file  
-✅ Sends **personalized** emails with names & custom messages  
-✅ Supports **attachments** (optional)  
-✅ Uses **multi-threading** for fast email sending  
-✅ **Logs all sent emails** in `logs/sent_emails.log`  
-✅ Uses a **.env file for security** (Gmail App Password)  
-✅ **Scalable & Modular Codebase** for easy improvements  
-
----
+This project allows you to send personalized emails with attachments using Gmail SMTP. It also supports MJML templates for beautifully designed HTML emails.
 
 ## 📂 Project Structure
 ```
 📁 email-sender/
 │── 📁 core/
-│   │── email_service.py
-│   │── logger.py
+│   │── email_service.py       # Handles email generation
+│   │── send_email.py          # Sends emails via SMTP
+│   │── logger.py              # Logs sent emails
 │── 📁 templates/
-│   │── email_template.html
-│── 📁 logs/  (auto-created)
+│   │── email_template.mjml    # MJML template (convert to HTML)
+│   │── email_template.html    # Converted HTML email
 │── 📁 data/
-│   │── recipients.csv  (Create this manually)
-│── .env  (Create this manually)
-│── main.py
-│── requirements.txt
-│── README.md
+│   │── recipients.csv         # List of email recipients
+│── 📁 logs/                   # Logs email activity (auto-created)
+│── .env                       # Stores sensitive email credentials
+│── requirements.txt           # Required Python packages
+│── README.md                  # Project documentation
+│── main.py                    # Entry point to run the script
 ```
 
----
-
-## 📋 Setup Instructions
+## 🚀 Setup Instructions
 ### **1️⃣ Install Dependencies**
-Ensure you have Python installed. Then, install required libraries:
+Activate your virtual environment:
+```bash
+python -m venv venv
+source venv/bin/activate  # Mac/Linux
+venv\Scripts\activate     # Windows
+```
+
+Then install Python dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-### **2️⃣ Create a `.env` File**
-You need to create a `.env` file in the root directory and fill in the required credentials:
-```ini
-EMAIL_SENDER="your-email@gmail.com"
-EMAIL_PASSWORD="your-app-password"  # Use an App Password, not your real password
+### **2️⃣ Setup Node.js & MJML**
+Since MJML is a Node.js package, install Node.js inside the virtual environment:
+```bash
+nodeenv -p
+npm install -g mjml
+```
+
+Verify installation:
+```bash
+mjml --version
+```
+
+### **3️⃣ Configure Environment Variables**
+Create a `.env` file in the project root and fill in your email credentials:
+```
+EMAIL_SENDER="example@gmail.com"
+EMAIL_PASSWORD="xx aa mm dd cc"
 SMTP_SERVER="smtp.gmail.com"
 SMTP_PORT=587
 ```
-🔹 **Important:** Enable **2-Step Verification** on your Google account and generate an **App Password** from [Google App Passwords](https://myaccount.google.com/apppasswords).
+🔹 **Use an App Password!** Get one from [Google App Passwords](https://myaccount.google.com/apppasswords).
 
-### **3️⃣ Create a `data/` Folder & `recipients.csv` File**
-Inside the `data/` folder, create a `recipients.csv` file containing recipient details:
+### **4️⃣ Prepare Recipients List**
+Create a `data/recipients.csv` file:
 ```csv
 email,name,custom_message
-alexmmech@gmail.com,Alex,Hey Alex, this is a test email just for you!
-info@wearebrain.com,WeAreBrain Team,I'm excited about your work on AI projects.
+alexmmech@gmail.com,Alex,Hope you're having a great day!
 ```
 
-### **4️⃣ Run the Script**
-Once everything is set up, run the script:
+### **5️⃣ Convert MJML to HTML**
+Run this command to generate the HTML email:
+```bash
+mjml templates/email_template.mjml -o templates/email_template.html
+```
+Alternatively, automate it with Python:
+```python
+import subprocess
+
+def convert_mjml():
+    subprocess.run(["mjml", "templates/email_template.mjml", "-o", "templates/email_template.html"], check=True)
+    print("✅ MJML converted successfully!")
+
+convert_mjml()
+```
+
+### **6️⃣ Send Emails**
+Run the script to send emails:
 ```bash
 python main.py
 ```
 
-### **5️⃣ Check Logs**
-To see which emails were sent successfully:
-```bash
-type logs/sent_emails.log  # Windows
-cat logs/sent_emails.log  # macOS/Linux
-```
+## ✅ Features
+✅ Reads **recipients** from CSV  
+✅ Sends **personalized** emails  
+✅ Supports **attachments**  
+✅ Uses **MJML for beautiful templates**  
+✅ Logs sent emails in `/logs/`  
+
+## 🔥 Next Steps
+- Add a **Flask or FastAPI UI** for easier management
+- Use **Celery** for scheduled email sending
+- Implement **multi-threading** for faster delivery
 
 ---
 
-## 📌 Customization
-### **Modify the Email Template**
-Edit `templates/email_template.html` to change the email design.
-
-### **Add Attachments**
-Modify `main.py` to specify a file in the `ATTACHMENT_PATH` variable.
-
-### **Improve Scalability**
-- Use **Gmail API** instead of SMTP for better performance.
-- Integrate with **Flask/Django** to build a web interface.
-- Add **Celery** for scheduled email sending.
-
+This tool was created by **Alex** and is available on [GitHub](https://github.com/frontend-alex/automated-email-sender). 🚀
 

@@ -1,47 +1,37 @@
-import smtplib
-import os
-import mimetypes
-from email.message import EmailMessage
-from dotenv import load_dotenv
-from core.logger import log_email
+def load_email_template():
+    with open("templates/email_template.html", "r", encoding="utf-8") as file:
+        return file.read()
 
-# Load credentials from .env
-load_dotenv()
-EMAIL_SENDER = os.getenv("EMAIL_SENDER")
-EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
-SMTP_SERVER = os.getenv("SMTP_SERVER")
-SMTP_PORT = int(os.getenv("SMTP_PORT"))
+def generate_email_content(name, custom_message):
+    template = load_email_template()
+    return template.replace("{name}", name).replace("{custom_message}", custom_message)
 
-TEMPLATE_PATH = "templates/email_template.html"
-with open(TEMPLATE_PATH, "r", encoding="utf-8") as file:
-    HTML_TEMPLATE = file.read()
 
-def send_email(to_email, name, custom_message, attachment_path=None):
-    try:
-        html_body = HTML_TEMPLATE.format(name=name, custom_message=custom_message)
+# import os
+# import subprocess
 
-        msg = EmailMessage()
-        msg["From"] = EMAIL_SENDER
-        msg["To"] = to_email
-        msg["Subject"] = f"Hello {name}, A Special Message for You!"
-        msg.set_content("This email requires an HTML viewer.")
-        msg.add_alternative(html_body, subtype="html")
+# def convert_mjml():
+#     """Ensures the latest MJML template is converted to HTML before loading."""
+#     try:
+#         subprocess.run(["mjml", "templates/email_template.mjml", "-o", "templates/email_template.html"], check=True)
+#         print("✅ MJML converted successfully!")
+#     except Exception as e:
+#         print(f"❌ Error converting MJML: {e}")
 
-        if attachment_path and os.path.exists(attachment_path):
-            mime_type, _ = mimetypes.guess_type(attachment_path)
-            main_type, sub_type = mime_type.split("/") if mime_type else ("application", "octet-stream")
-            
-            with open(attachment_path, "rb") as file:
-                msg.add_attachment(file.read(), maintype=main_type, subtype=sub_type, filename=os.path.basename(attachment_path))
+# def load_email_template():
+#     """Loads the HTML email template, ensuring it exists."""
+#     template_path = "templates/email_template.html"
 
-        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-            server.starttls()
-            server.login(EMAIL_SENDER, EMAIL_PASSWORD)
-            server.send_message(msg)
-        
-        log_email(to_email, "Success")
-        print(f"✅ Email sent to {to_email}")
+#     if not os.path.exists(template_path):
+#         print("⚠️ Warning: email_template.html not found! Using fallback message.")
+#         return "<p>Hello {name},</p><p>{custom_message}</p>"
 
-    except Exception as e:
-        log_email(to_email, f"Failed: {str(e)}")
-        print(f"❌ Failed to send email to {to_email}: {e}")
+#     with open(template_path, "r", encoding="utf-8") as file:
+#         return file.read()
+
+# def generate_email_content(name, custom_message):
+#     """Generates the email body with personalized content."""
+#     convert_mjml()  
+#     template = load_email_template()
+
+#     return template.replace("{name}", name).replace("{custom_message}", custom_message)
