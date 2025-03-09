@@ -57,7 +57,6 @@ Inside the `data/` folder, create a `recipients.csv` file containing recipient d
 ```csv
 email,name,custom_message
 alexmmech@gmail.com,Alex,Hey Alex, this is a test email just for you!
-info@wearebrain.com,WeAreBrain Team,I'm excited about your work on AI projects.
 ```
 
 ### **4️⃣ Run the Script**
