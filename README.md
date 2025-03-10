@@ -93,12 +93,3 @@ python main.py
 ✅ Uses **MJML for beautiful templates**  
 ✅ Logs sent emails in `/logs/`  
 
-## 🔥 Next Steps
-- Add a **Flask or FastAPI UI** for easier management
-- Use **Celery** for scheduled email sending
-- Implement **multi-threading** for faster delivery
-
----
-
-This tool was created by **Alex** and is available on [GitHub](https://github.com/frontend-alex/automated-email-sender). 🚀
-
